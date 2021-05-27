@@ -281,7 +281,7 @@ function submitData(){
                     url={currentVideo}
                     controls
                     width="100%"
-                    onEnded={() => {alert("video ended!")}}
+                    onEnded={() => {alert("Congratulations! You Have Completed This Module! Keep Learning and growing 👍")}}
                     />
 
 
