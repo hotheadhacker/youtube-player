@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.270e2a8f.chunk.css",
+    "main.js": "/static/js/main.26e40ca9.chunk.js",
+    "main.js.map": "/static/js/main.26e40ca9.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.fb5fb25b.js",
+    "runtime-main.js.map": "/static/js/runtime-main.fb5fb25b.js.map",
+    "static/js/2.6e479174.chunk.js": "/static/js/2.6e479174.chunk.js",
+    "static/js/2.6e479174.chunk.js.map": "/static/js/2.6e479174.chunk.js.map",
+    "static/js/3.38c5d8a1.chunk.js": "/static/js/3.38c5d8a1.chunk.js",
+    "static/js/3.38c5d8a1.chunk.js.map": "/static/js/3.38c5d8a1.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/main.270e2a8f.chunk.css.map": "/static/css/main.270e2a8f.chunk.css.map",
+    "static/js/2.6e479174.chunk.js.LICENSE.txt": "/static/js/2.6e479174.chunk.js.LICENSE.txt",
+    "static/media/deno.820d88a4.svg": "/static/media/deno.820d88a4.svg",
+    "static/media/docker.1497612c.png": "/static/media/docker.1497612c.png",
+    "static/media/graphql.9ec42864.png": "/static/media/graphql.9ec42864.png",
+    "static/media/nodejs.4ffd30ab.png": "/static/media/nodejs.4ffd30ab.png",
+    "static/media/python.0e3d57bf.png": "/static/media/python.0e3d57bf.png",
+    "static/media/reactjs.7927890c.jpg": "/static/media/reactjs.7927890c.jpg",
+    "static/media/typescript.c2eef6df.png": "/static/media/typescript.c2eef6df.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.fb5fb25b.js",
+    "static/js/2.6e479174.chunk.js",
+    "static/css/main.270e2a8f.chunk.css",
+    "static/js/main.26e40ca9.chunk.js"
+  ]
+}
