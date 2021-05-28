@@ -165,7 +165,7 @@ function submitData(){
                         className="pointer skill-img mx-1"
                         style={{width: "80px"}}
                         src={JSImg}
-                        onClick={() => {submitSkillButton('reactjs')}}
+                        onClick={() => {submitSkillButton('javascript')}}
                         />
                         <img
                         className="pointer skill-img mx-1"
