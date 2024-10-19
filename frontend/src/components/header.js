@@ -1,6 +1,6 @@
 export default () => {
   return (
-    <div className="bg-gradient-to-r from-blue-500 to-indigo-600 py-4">
+    <div className="bg-gray-900 text-white py-8">
       <center>
         <h1 className="text-white text-3xl font-bold">
           &lt;YouTube Player /&gt;
