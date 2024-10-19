@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import ReactPlayer from 'react-player/youtube';
 
@@ -13,13 +13,17 @@ import TSImg from './../imgs/typescript.png';
 import DockerImg from './../imgs/docker.png';
 
 export default () => {
+    
   const [data, setData] = useState('');
   const [searchBoxFlag, setSearchBoxFlag] = useState(false);
   const [skills, setSkills] = useState('Select a skill to load tutorial');
   const [playlistResponse, setPlaylistResponse] = useState([]);
   const [currentVideo, setCurrentVideo] = useState('');
-  const [title, setTitle] = useState('Click on the video title from the playlist to begin');
+  const [title, setTitle] = useState('Search a video or select from the playlist to begin');
   const [description, setDescription] = useState('Select a video');
+  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
+  const playerRef = useRef(); 
+const [isPlaying, setIsPlaying] = useState(false); 
 
   function getData(val) {
     setData(val.target.value);
@@ -83,27 +87,29 @@ export default () => {
         });
 
 }
-
 function nextVideo(video, title, description) {
     let videoId = video.id?.videoId || video.snippet?.resourceId?.videoId;
-  
+
     if (!videoId) {
-      console.error("Video ID not found");
-      return;
+        console.error("Video ID not found");
+        return;
     }
-  
+
     setTitle(title);
     setDescription(description);
     setCurrentVideo(`https://www.youtube.com/watch?v=${videoId}`);
-  }
+    setIsDescriptionVisible(true); // Show the description when a video is selected
+}
 
   return (
-    <div className="bg-gray-100 min-h-screen p-6">
+    <div className="p-10">
+    {/* Full-screen background image */}
+    <div className="fullscreen-bg"></div>
       {/* Header Section */}
       <center>
-        <small className="text-gray-600">
-          Welcome To Distraction-Free YouTube Learning Experience 👓
-        </small>
+        <h3 className="text-gray-600 text-lg">
+          Welcome To Distraction-Free YouTube Learning Experience 👨‍💻
+        </h3>
         <h1 className="text-4xl text-blue-600 my-4">What Do You Wanna Learn Today?</h1>
       </center>
 
@@ -165,8 +171,10 @@ function nextVideo(video, title, description) {
             onClick={() => submitSkillButton('docker')}
           />
         </div>
-        <h3 className="text-gray-700">OR</h3>
+        <h2 className="text-gray-700">OR</h2>
+
       </center>
+      <br></br>
 
       {/* Search Box */}
       <center>
@@ -197,17 +205,66 @@ function nextVideo(video, title, description) {
       {/* Video & Playlist Section */}
       <div className="flex flex-col md:flex-row mt-6 space-x-0 md:space-x-6">
         {/* Video Player */}
-        <div className="w-full md:w-2/3 bg-white shadow-lg p-4 rounded-lg">
-          <ReactPlayer url={currentVideo} controls width="100%" />
-          <h3 className="text-2xl mt-4">{title}</h3>
-          <hr className="my-2" />
-          <p>
-  {description.split('\n').map((line, index) => (
-    <span key={index}>{line}<br/></span>
-  ))}
-</p>
 
-        </div>
+<div className="w-full md:w-2/3 bg-white shadow-lg p-4 rounded-lg">
+  <ReactPlayer 
+    ref={playerRef} // Create a ref to control the player
+    url={currentVideo} 
+    controls 
+    width="100%" 
+    height="500px" 
+    playing={isPlaying} // Control playing state
+    onPause={() => setIsPlaying(false)} // Update state on pause
+    onPlay={() => setIsPlaying(true)} // Update state on play
+  />
+  
+<h3 className="text-2xl mt-2 text-black"> {/* Set text color to black */}
+  {title}
+</h3>
+  <hr className="my-2" />
+
+  {/* Control Buttons */}
+  <div className="flex justify-center space-x-4 my-4"> {/* Reduced space-x and my */}
+    <button 
+      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+      onClick={() => playerRef.current.seekTo(playerRef.current.getCurrentTime() - 10)} 
+    >
+      -10s
+    </button>
+    <button 
+      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+      onClick={() => setIsPlaying(!isPlaying)}
+    >
+      {isPlaying ? "Pause" : "Play"}
+    </button>
+    <button 
+      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+      onClick={() => playerRef.current.seekTo(playerRef.current.getCurrentTime() + 10)}
+    >
+      +10s
+    </button>
+   
+  </div>
+
+  {/* Centered Button for Show/Hide Description */}
+  <div className="flex justify-center my-3"> {/* Reduced margin */}
+    <button 
+      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+      onClick={() => setIsDescriptionVisible(!isDescriptionVisible)}
+    >
+      {isDescriptionVisible ? "Hide Description" : "Show Description"}
+    </button>
+  </div>
+
+  {/* Conditional Rendering of Description */}
+  {isDescriptionVisible && (
+    <p className="text-black mt-2"> {/* Added margin-top for spacing */}
+      {description.split('\n').map((line, index) => (
+        <span key={index}>{line}<br /></span>
+      ))}
+    </p>
+  )}
+</div>
 
         {/* Playlist */}
         <div className="w-full md:w-1/3 bg-white shadow-lg p-4 rounded-lg overflow-y-scroll h-[700px]">

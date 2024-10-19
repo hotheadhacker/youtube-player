@@ -1,12 +1,23 @@
-export default () => {
+// frontend/src/components/header.js
+import React from 'react';
+
+const Header = ({ toggleTheme }) => {
   return (
-    <div className="bg-gray-900 text-white py-8">
-      <center>
+    <div className="bg-gray-900 text-white py-8 flex justify-between items-center px-4">
+      <div className="flex-grow">
         <h1 className="text-white text-3xl font-bold">
           &lt;YouTube Player /&gt;
-          <span className="text-sm font-light ml-2">v1.0 by Salman Qureshi</span>
+         
         </h1>
-      </center>
+      </div>
+      <button 
+        onClick={toggleTheme} 
+        className="theme-toggle bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition mx-4"
+      >
+        Toggle Theme
+      </button>
     </div>
   );
 };
+
+export default Header;

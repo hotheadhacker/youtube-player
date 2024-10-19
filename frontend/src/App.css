@@ -49,3 +49,47 @@
 .footer h3 a{
   color: rgb(0, 0, 0);
 }
+/* frontend/src/App.css */
+
+/* frontend/src/App.css */
+
+/* Light Theme */
+body.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.header {
+  background-color: #f8f9fa; /* Light header background */
+}
+
+/* Dark Theme */
+body.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.header {
+  background-color: #1e1e1e; /* Dark header background */
+}
+
+/* Ensure all components respond to the theme */
+.container {
+  background-color: inherit; /* Inherit background color from body */
+  color: inherit; /* Inherit text color from body */
+}
+
+/* Additional styles for the theme toggle button */
+.theme-toggle {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.theme-toggle:hover {
+  background-color: #0056b3;
+}
