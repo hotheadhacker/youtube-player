@@ -47,13 +47,13 @@ const [isPlaying, setIsPlaying] = useState(false);
     setSearchBoxFlag(false)
     var playlistId = '';
     if(skill == 'python'){
-        playlistId = "PLsyeobzWxl7poL9JTVyndKe62ieoN-MZ3"
+        playlistId = "PLEiEAq2VkUUJO27b6PyoSd7CJjWIPyHYO"
     }
     if(skill == 'reactjs'){
-        playlistId = "PL4cUxeGkcC9ij8CfkAY2RAGb-tmkNwQHG"
+        playlistId = "PLSsAz5wf2lkKm0BG9wUWWSgYWBzDa-dFs"
     }
     if(skill == 'reactnative'){
-        playlistId = "PL4cUxeGkcC9ixPU-QkScoRBVxtPPzVjrQ"
+        playlistId = "PLRAV69dS1uWSjBBJ-egNNOd4mdblt1P4c"
     }
     if(skill == 'graphql'){
         playlistId = "PL4cUxeGkcC9iK6Qhn-QLcXCXPQUov1U7f"
@@ -62,7 +62,7 @@ const [isPlaying, setIsPlaying] = useState(false);
         playlistId = "PL4cUxeGkcC9i9Ae2D9Ee1RvylH38dKuET"
     }
     if(skill == 'nodejs'){
-        playlistId = "PLillGF-RfqbYRpji8t4SxUkMxfowG4Kqp"
+        playlistId = "PL_cUvD4qzbkwjmjy-KjbieZ8J9cGwxZpC"
     }
     if(skill == 'deno'){
         playlistId = "PL4cUxeGkcC9gnaJdxuGvEGYQ9iHb8mxsh"
