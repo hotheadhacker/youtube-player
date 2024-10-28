@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import ReactPlayer from 'react-player/youtube';
 
@@ -24,6 +24,18 @@ export default () => {
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
   const playerRef = useRef(); 
 const [isPlaying, setIsPlaying] = useState(false); 
+const [startTime, setStartTime] = useState(0); // Track video start time for resuming
+
+  useEffect(() => {
+    // Retrieve saved video ID and time from localStorage on component load
+    const savedVideoId = localStorage.getItem('savedVideoId');
+    const savedTime = parseFloat(localStorage.getItem('savedTime')) || 0;
+
+    if (savedVideoId) {
+      setCurrentVideo(`https://www.youtube.com/watch?v=${savedVideoId}`);
+      setStartTime(savedTime);
+    }
+  }, []);
 
   function getData(val) {
     setData(val.target.value);
@@ -98,8 +110,19 @@ function nextVideo(video, title, description) {
     setTitle(title);
     setDescription(description);
     setCurrentVideo(`https://www.youtube.com/watch?v=${videoId}`);
-    setIsDescriptionVisible(true); // Show the description when a video is selected
+    setStartTime(0); // Reset start time for new video
+    setIsDescriptionVisible(true);
+
+    // Save current video ID to localStorage
+    localStorage.setItem('savedVideoId', videoId);
 }
+
+  const handleProgress = (progress) => {
+    // Save current time to localStorage
+    if (progress.playedSeconds > 0) {
+      localStorage.setItem('savedTime', progress.playedSeconds);
+    }
+  };
 
   return (
     <div className="p-10">
@@ -205,18 +228,19 @@ function nextVideo(video, title, description) {
       {/* Video & Playlist Section */}
       <div className="flex flex-col md:flex-row mt-6 space-x-0 md:space-x-6">
         {/* Video Player */}
-
-<div className="w-full md:w-2/3 bg-white shadow-lg p-4 rounded-lg">
-  <ReactPlayer 
-    ref={playerRef} // Create a ref to control the player
-    url={currentVideo} 
-    controls 
-    width="100%" 
-    height="500px" 
-    playing={isPlaying} // Control playing state
-    onPause={() => setIsPlaying(false)} // Update state on pause
-    onPlay={() => setIsPlaying(true)} // Update state on play
-  />
+        <div className="w-full md:w-2/3 bg-white shadow-lg p-4 rounded-lg">
+          <ReactPlayer 
+            ref={playerRef} // Create a ref to control the player
+            url={currentVideo} 
+            controls 
+            width="100%" 
+            height="500px" 
+            playing={isPlaying} // Control playing state
+            onPause={() => setIsPlaying(false)} // Update state on pause
+            onPlay={() => setIsPlaying(true)} // Update state on play
+            onProgress={handleProgress} // Save progress to localStorage
+            onStart={() => playerRef.current.seekTo(startTime)} // Resume from last saved time
+          />
   
 <h3 className="text-2xl mt-2 text-black"> {/* Set text color to black */}
   {title}
