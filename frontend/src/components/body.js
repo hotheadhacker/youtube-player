@@ -27,29 +27,41 @@ const [isPlaying, setIsPlaying] = useState(false);
 const [startTime, setStartTime] = useState(0); // Track video start time for resuming
 
   useEffect(() => {
-    // Retrieve saved video ID and time from localStorage on component load
+    // Retrieve saved video ID, time, search query, and playlist from localStorage on load
     const savedVideoId = localStorage.getItem('savedVideoId');
     const savedTime = parseFloat(localStorage.getItem('savedTime')) || 0;
+    const savedSearchQuery = localStorage.getItem('savedSearchQuery');
+    const savedPlaylist = JSON.parse(localStorage.getItem('savedPlaylist') || '[]');
 
     if (savedVideoId) {
       setCurrentVideo(`https://www.youtube.com/watch?v=${savedVideoId}`);
       setStartTime(savedTime);
     }
+
+    if (savedSearchQuery) {
+      setData(savedSearchQuery); // Restore search term in the input
+    }
+
+    if (savedPlaylist.length) {
+      setPlaylistResponse(savedPlaylist); // Restore playlist
+    }
   }, []);
 
   function getData(val) {
-    setData(val.target.value);
+    const query = val.target.value;
+    setData(query);
+    localStorage.setItem('savedSearchQuery', query); // Save search term to localStorage
   }
-
   function submitData() {
     if (data === '') {
       alert("Text box can't be empty!");
     } else {
       setSearchBoxFlag(true);
       axios
-        .get('https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyBWLybXWaAdV7-7tlm9aClkSPiPAdm7boA&type=video&maxResults=20&q=' +data)
+        .get(`https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyBWLybXWaAdV7-7tlm9aClkSPiPAdm7boA&type=video&maxResults=20&q=${data}`)
         .then((response) => {
           setPlaylistResponse(response.data.items);
+          localStorage.setItem('savedPlaylist', JSON.stringify(response.data.items)); // Save playlist data
         });
     }
   }
@@ -91,7 +103,7 @@ const [startTime, setStartTime] = useState(0); // Track video start time for res
         .then((response) => {
            
             setPlaylistResponse(response.data.items);
-            
+            localStorage.setItem('savedPlaylist', JSON.stringify(response.data.items));
             console.log("inside skills image");
 
             
@@ -103,8 +115,8 @@ function nextVideo(video, title, description) {
     let videoId = video.id?.videoId || video.snippet?.resourceId?.videoId;
 
     if (!videoId) {
-        console.error("Video ID not found");
-        return;
+      console.error('Video ID not found');
+      return;
     }
 
     setTitle(title);
@@ -115,7 +127,7 @@ function nextVideo(video, title, description) {
 
     // Save current video ID to localStorage
     localStorage.setItem('savedVideoId', videoId);
-}
+  }
 
   const handleProgress = (progress) => {
     // Save current time to localStorage
