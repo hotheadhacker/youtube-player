@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import ReactPlayer from 'react-player/youtube';
 
@@ -24,20 +24,44 @@ export default () => {
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
   const playerRef = useRef(); 
 const [isPlaying, setIsPlaying] = useState(false); 
+const [startTime, setStartTime] = useState(0); // Track video start time for resuming
+
+  useEffect(() => {
+    // Retrieve saved video ID, time, search query, and playlist from localStorage on load
+    const savedVideoId = localStorage.getItem('savedVideoId');
+    const savedTime = parseFloat(localStorage.getItem('savedTime')) || 0;
+    const savedSearchQuery = localStorage.getItem('savedSearchQuery');
+    const savedPlaylist = JSON.parse(localStorage.getItem('savedPlaylist') || '[]');
+
+    if (savedVideoId) {
+      setCurrentVideo(`https://www.youtube.com/watch?v=${savedVideoId}`);
+      setStartTime(savedTime);
+    }
+
+    if (savedSearchQuery) {
+      setData(savedSearchQuery); // Restore search term in the input
+    }
+
+    if (savedPlaylist.length) {
+      setPlaylistResponse(savedPlaylist); // Restore playlist
+    }
+  }, []);
 
   function getData(val) {
-    setData(val.target.value);
+    const query = val.target.value;
+    setData(query);
+    localStorage.setItem('savedSearchQuery', query); // Save search term to localStorage
   }
-
   function submitData() {
     if (data === '') {
       alert("Text box can't be empty!");
     } else {
       setSearchBoxFlag(true);
       axios
-        .get('https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyBWLybXWaAdV7-7tlm9aClkSPiPAdm7boA&type=video&maxResults=20&q=' +data)
+        .get(`https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyBWLybXWaAdV7-7tlm9aClkSPiPAdm7boA&type=video&maxResults=20&q=${data}`)
         .then((response) => {
           setPlaylistResponse(response.data.items);
+          localStorage.setItem('savedPlaylist', JSON.stringify(response.data.items)); // Save playlist data
         });
     }
   }
@@ -79,7 +103,7 @@ const [isPlaying, setIsPlaying] = useState(false);
         .then((response) => {
            
             setPlaylistResponse(response.data.items);
-            
+            localStorage.setItem('savedPlaylist', JSON.stringify(response.data.items));
             console.log("inside skills image");
 
             
@@ -91,15 +115,26 @@ function nextVideo(video, title, description) {
     let videoId = video.id?.videoId || video.snippet?.resourceId?.videoId;
 
     if (!videoId) {
-        console.error("Video ID not found");
-        return;
+      console.error('Video ID not found');
+      return;
     }
 
     setTitle(title);
     setDescription(description);
     setCurrentVideo(`https://www.youtube.com/watch?v=${videoId}`);
-    setIsDescriptionVisible(true); // Show the description when a video is selected
-}
+    setStartTime(0); // Reset start time for new video
+    setIsDescriptionVisible(true);
+
+    // Save current video ID to localStorage
+    localStorage.setItem('savedVideoId', videoId);
+  }
+
+  const handleProgress = (progress) => {
+    // Save current time to localStorage
+    if (progress.playedSeconds > 0) {
+      localStorage.setItem('savedTime', progress.playedSeconds);
+    }
+  };
 
   return (
     <div className="p-10">
@@ -205,18 +240,19 @@ function nextVideo(video, title, description) {
       {/* Video & Playlist Section */}
       <div className="flex flex-col md:flex-row mt-6 space-x-0 md:space-x-6">
         {/* Video Player */}
-
-<div className="w-full md:w-2/3 bg-white shadow-lg p-4 rounded-lg">
-  <ReactPlayer 
-    ref={playerRef} // Create a ref to control the player
-    url={currentVideo} 
-    controls 
-    width="100%" 
-    height="500px" 
-    playing={isPlaying} // Control playing state
-    onPause={() => setIsPlaying(false)} // Update state on pause
-    onPlay={() => setIsPlaying(true)} // Update state on play
-  />
+        <div className="w-full md:w-2/3 bg-white shadow-lg p-4 rounded-lg">
+          <ReactPlayer 
+            ref={playerRef} // Create a ref to control the player
+            url={currentVideo} 
+            controls 
+            width="100%" 
+            height="500px" 
+            playing={isPlaying} // Control playing state
+            onPause={() => setIsPlaying(false)} // Update state on pause
+            onPlay={() => setIsPlaying(true)} // Update state on play
+            onProgress={handleProgress} // Save progress to localStorage
+            onStart={() => playerRef.current.seekTo(startTime)} // Resume from last saved time
+          />
   
 <h3 className="text-2xl mt-2 text-black"> {/* Set text color to black */}
   {title}
