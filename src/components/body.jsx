@@ -1,16 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import ReactPlayer from 'react-player/youtube';
-
-import PythonImg from './../imgs/python.png';
-import ReactImg from './../imgs/reactjs.jpg';
-import ReactNativeImg from './../imgs/reactnative.png';
-import GraphQLImg from './../imgs/graphql.png';
-import JSImg from './../imgs/javascript.png';
-import NodeImg from './../imgs/nodejs.png';
-import DenoImg from './../imgs/deno.svg';
-import TSImg from './../imgs/typescript.png';
-import DockerImg from './../imgs/docker.png';
+import { motion } from 'framer-motion';
+import { SiPython, SiReact, SiGraphql, SiJavascript, SiNodedotjs, 
+         SiDeno, SiTypescript, SiDocker, SiCplusplus, SiGo, SiRust, SiPrisma } from 'react-icons/si';
+import { FaPlay, FaPause, FaForward, FaBackward, FaJava } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Body() {
     
@@ -25,6 +21,8 @@ export default function Body() {
   const playerRef = useRef(); 
 const [isPlaying, setIsPlaying] = useState(false); 
 const [startTime, setStartTime] = useState(0); // Track video start time for resuming
+const [isLoading, setIsLoading] = useState(false);
+const [error, setError] = useState(null);
 
   useEffect(() => {
     // Retrieve saved video ID, time, search query, and playlist from localStorage on load
@@ -54,64 +52,122 @@ const [startTime, setStartTime] = useState(0); // Track video start time for res
   }
   function submitData() {
     if (data === '') {
-      alert("Text box can't be empty!");
-    } else {
-      setSearchBoxFlag(true);
-      axios
-        .get(`https://www.googleapis.com/youtube/v3/search?part=snippet&key=${import.meta.env.VITE_YOUTUBE_API_KEY}&type=video&maxResults=20&q=${data}`)
-        .then((response) => {
-          setPlaylistResponse(response.data.items);
-          localStorage.setItem('savedPlaylist', JSON.stringify(response.data.items)); // Save playlist data
-        });
+      toast.warning("Please enter a search term!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return;
     }
+
+    setSearchBoxFlag(true);
+    axios
+      .get(`https://www.googleapis.com/youtube/v3/search?part=snippet&key=${import.meta.env.VITE_YOUTUBE_API_KEY}&type=video&maxResults=20&q=${data}`)
+      .then((response) => {
+        setPlaylistResponse(response.data.items);
+        localStorage.setItem('savedPlaylist', JSON.stringify(response.data.items));
+      })
+      .catch((error) => {
+        console.error('API Error:', error);
+        
+        let errorMessage = "An unexpected error occurred.";
+        
+        if (error.response) {
+          // Handle specific error codes
+          switch (error.response.status) {
+            case 403:
+              errorMessage = "API quota exceeded. Please try again later or use your own YouTube API key.";
+              break;
+            case 400:
+              errorMessage = "Invalid request. Please check your search term.";
+              break;
+            case 429:
+              errorMessage = "Too many requests. Please wait a moment and try again.";
+              break;
+            default:
+              errorMessage = `Error: ${error.response.data.error?.message || "Something went wrong"}`;
+          }
+        } else if (error.request) {
+          errorMessage = "Network error. Please check your internet connection.";
+        }
+
+        // Show error toast
+        toast.error(<div className="flex flex-col w-96"><span className="font-bold mb-1">Error</span><span>{errorMessage}</span></div>, {
+          position: "top-center",
+          autoClose: 8000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+
+        // Clear the playlist if there's an error
+        setPlaylistResponse([]);
+        setSearchBoxFlag(false);
+      });
   }
 
-  function submitSkillButton(skill){
-    setSkills(skill)
-    setSearchBoxFlag(false)
-    var playlistId = '';
-    if(skill == 'python'){
-        playlistId = "PLEiEAq2VkUUJO27b6PyoSd7CJjWIPyHYO"
-    }
-    if(skill == 'reactjs'){
-        playlistId = "PLSsAz5wf2lkKm0BG9wUWWSgYWBzDa-dFs"
-    }
-    if(skill == 'reactnative'){
-        playlistId = "PLRAV69dS1uWSjBBJ-egNNOd4mdblt1P4c"
-    }
-    if(skill == 'graphql'){
-        playlistId = "PL4cUxeGkcC9iK6Qhn-QLcXCXPQUov1U7f"
-    }
-    if(skill == 'javascript'){
-        playlistId = "PL4cUxeGkcC9i9Ae2D9Ee1RvylH38dKuET"
-    }
-    if(skill == 'nodejs'){
-        playlistId = "PL_cUvD4qzbkwjmjy-KjbieZ8J9cGwxZpC"
-    }
-    if(skill == 'deno'){
-        playlistId = "PL4cUxeGkcC9gnaJdxuGvEGYQ9iHb8mxsh"
-    }
-    if(skill == 'typescript'){
-        playlistId = "PL4cUxeGkcC9gUgr39Q_yD6v-bSyMwKPUI"
-    }
-    if(skill == 'docker'){
-        playlistId = "PLhW3qG5bs-L99pQsZ74f-LC-tOEsBp2rK"
+  const playlistIds = {
+    python: "PLEiEAq2VkUUJO27b6PyoSd7CJjWIPyHYO",
+    reactjs: "PLSsAz5wf2lkKm0BG9wUWWSgYWBzDa-dFs",
+    reactnative: "PLRAV69dS1uWSjBBJ-egNNOd4mdblt1P4c",
+    graphql: "PL4cUxeGkcC9iK6Qhn-QLcXCXPQUov1U7f",
+    javascript: "PL4cUxeGkcC9i9Ae2D9Ee1RvylH38dKuET",
+    nodejs: "PL_cUvD4qzbkwjmjy-KjbieZ8J9cGwxZpC",
+    deno: "PL4cUxeGkcC9gnaJdxuGvEGYQ9iHb8mxsh",
+    typescript: "PL4cUxeGkcC9gUgr39Q_yD6v-bSyMwKPUI",
+    docker: "PLhW3qG5bs-L99pQsZ74f-LC-tOEsBp2rK",
+    "c++": "PLVlQHNRLflP8_DGKcMoRw-TYJJALgGu4J",
+    java: "PL9gnSGHSqcnr_DxHsP7AW9ftq0AtAyYqJ",
+    golang: "PL4cUxeGkcC9gC88BEo9czgyS72A3doDeM",
+    rust: "PLai5B987bZ9CoVR-QEIN9foz4QCJ0H2Y8",
+    prisma: "PLsvvBhdpMqBwrKGF8TytiLlcCT3gB_bmW"
+  };
+
+  function submitSkillButton(skill) {
+    setSkills(skill);
+    setSearchBoxFlag(false);
+    setIsLoading(true);
+    setError(null);
+
+    const playlistId = playlistIds[skill];
+    
+    if (!playlistId) {
+      setError(`No playlist found for ${skill}`);
+      setIsLoading(false);
+      return;
     }
 
-    console.log("Python button clicked!");
     axios.get(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=100&key=${import.meta.env.VITE_YOUTUBE_API_KEY}&playlistId=${playlistId}`)
-        .then((response) => {
-           
-            setPlaylistResponse(response.data.items);
-            localStorage.setItem('savedPlaylist', JSON.stringify(response.data.items));
-            console.log("inside skills image");
+      .then((response) => {
+        setPlaylistResponse(response.data.items);
+        localStorage.setItem('savedPlaylist', JSON.stringify(response.data.items));
+      })
+      .catch((error) => {
+        console.error('Playlist API Error:', error);
+        let errorMessage = "Failed to load playlist.";
+        
+        if (error.response?.status === 403) {
+          errorMessage = "API quota exceeded. Please try again later or use your own YouTube API key.";
+        } else if (error.response?.status === 404) {
+          errorMessage = `Playlist for ${skill} not found or is private.`;
+        }
 
-            
-           
+        setError(errorMessage);
+        toast.error(errorMessage, {
+          position: "top-center",
+          autoClose: 5000,
         });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
 
-}
-function nextVideo(video, title, description) {
+  function nextVideo(video, title, description) {
     let videoId = video.id?.videoId || video.snippet?.resourceId?.videoId;
 
     if (!videoId) {
@@ -136,191 +192,276 @@ function nextVideo(video, title, description) {
     }
   };
 
+  const skillIcons = [
+    { icon: SiPython, name: 'python', color: '#3776AB' },
+    { icon: SiJavascript, name: 'javascript', color: '#F7DF1E' },
+    { icon: SiReact, name: 'reactjs', color: '#61DAFB' },
+     { icon: SiNodedotjs, name: 'nodejs', color: '#339933' },
+    { icon: SiReact, name: 'reactnative', color: '#61DAFB' },
+    { icon: SiTypescript, name: 'typescript', color: '#3178C6' },
+    { icon: SiCplusplus, name: 'c++', color: '#00599C' },
+    { icon: FaJava, name: 'java', color: '#007396' },
+    { icon: SiGo, name: 'golang', color: '#00ADD8' },
+    { icon: SiRust, name: 'rust', color: '#c7c3c3' },
+    { icon: SiDeno, name: 'deno', color: '#c7c3c3' },
+    { icon: SiGraphql, name: 'graphql', color: '#E535AB' },
+    { icon: SiPrisma, name: 'prisma', color: '#336791' },
+    { icon: SiDocker, name: 'docker', color: '#2496ED' },
+   
+  ];
+
+  const linkify = (text) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.split('\n').map((line, lineIndex) => (
+      <p key={lineIndex} className="mb-2">
+        {line.split(urlRegex).map((part, index) => {
+          if (part.match(urlRegex)) {
+            return (
+              <a
+                key={index}
+                href={part}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-500 hover:text-indigo-600 underline"
+              >
+                {part}
+              </a>
+            );
+          }
+          return part;
+        })}
+      </p>
+    ));
+  };
+
   return (
-    <div className="p-10">
-    {/* Full-screen background image */}
-    <div className="fullscreen-bg"></div>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="p-6 md:p-10 bg-white dark:bg-black min-h-screen"
+    >
+      <ToastContainer />
       {/* Header Section */}
-      <center>
-        <h3 className="text-gray-600 text-lg">
+      <motion.div
+        initial={{ y: -20 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="text-center space-y-4 mb-10"
+      >
+        {/* <h3 className="text-gray-600 dark:text-gray-400 text-lg">
           Welcome To Distraction-Free YouTube Learning Experience 👨‍💻
-        </h3>
-        <h1 className="text-4xl text-blue-600 my-4">What Do You Wanna Learn Today?</h1>
-      </center>
+        </h3> */}
+        <h1 className="text-4xl bg-gradient-to-r from-indigo-500 to-purple-500 text-transparent bg-clip-text font-bold">
+          What Do You Want To Learn Today?
+        </h1>
+      </motion.div>
 
-      {/* Skills Section */}
-      <center>
-        <div className="flex flex-wrap justify-center space-x-4 my-6">
-          <img
-            className="cursor-pointer transition-transform transform hover:scale-110"
-            style={{ width: '80px' }}
-            src={PythonImg}
-            onClick={() => submitSkillButton('python')}
-          />
-          <img
-            className="cursor-pointer transition-transform transform hover:scale-110"
-            style={{ width: '80px' }}
-            src={ReactImg}
-            onClick={() => submitSkillButton('reactjs')}
-          />
-          <img
-            className="cursor-pointer transition-transform transform hover:scale-110"
-            style={{ width: '80px' }}
-            src={ReactNativeImg}
-            onClick={() => submitSkillButton('reactnative')}
-          />
-          <img
-            className="cursor-pointer transition-transform transform hover:scale-110"
-            style={{ width: '80px' }}
-            src={GraphQLImg}
-            onClick={() => submitSkillButton('graphql')}
-          />
-          <img
-            className="cursor-pointer transition-transform transform hover:scale-110"
-            style={{ width: '80px' }}
-            src={JSImg}
-            onClick={() => submitSkillButton('javascript')}
-          />
-          <img
-            className="cursor-pointer transition-transform transform hover:scale-110"
-            style={{ width: '80px' }}
-            src={NodeImg}
-            onClick={() => submitSkillButton('nodejs')}
-          />
-          <img
-            className="cursor-pointer transition-transform transform hover:scale-110"
-            style={{ width: '80px' }}
-            src={DenoImg}
-            onClick={() => submitSkillButton('deno')}
-          />
-          <img
-            className="cursor-pointer transition-transform transform hover:scale-110"
-            style={{ width: '80px' }}
-            src={TSImg}
-            onClick={() => submitSkillButton('typescript')}
-          />
-          <img
-            className="cursor-pointer transition-transform transform hover:scale-110"
-            style={{ width: '80px' }}
-            src={DockerImg}
-            onClick={() => submitSkillButton('docker')}
-          />
-        </div>
-        <h2 className="text-gray-700">OR</h2>
+      {/* Skills Grid */}
+      <motion.div 
+        className="grid grid-cols-7 md:grid-cols-14 gap-4 max-w-7xl mx-auto mb-8"
+        initial={{ scale: 0.9 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.4 }}
+      >
+        {skillIcons.map((skill, index) => (
+          <motion.div
+            key={skill.name}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => submitSkillButton(skill.name)}
+            className="flex flex-col items-center justify-center cursor-pointer"
+          >
+            <skill.icon size={40} color={skill.color} />
+            <span className="text-sm mt-2 text-gray-600 dark:text-gray-400">
+              {skill.name}
+            </span>
+          </motion.div>
+        ))}
+      </motion.div>
 
-      </center>
-      <br></br>
-
-      {/* Search Box */}
-      <center>
-        <div className="bg-white p-4 shadow-lg rounded-lg w-full md:w-1/2 flex items-center justify-between space-x-4">
+      {/* Search Section */}
+      <motion.div 
+        className="max-w-2xl mx-auto mb-10"
+        initial={{ y: 20 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.6 }}
+      >
+        <div className="relative">
           <input
             type="text"
-            placeholder="Machine Learning..."
+            placeholder="Search for tutorials..."
             value={data}
             onChange={getData}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                submitData();
-              }
-            }}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onKeyPress={(e) => e.key === 'Enter' && submitData()}
+            className="w-full p-4 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 
+                     bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                     focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
           />
-          <button
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg disabled:opacity-50"
-            disabled={!data}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={submitData}
+            disabled={!data}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2
+                     px-4 py-2 rounded-md bg-gradient-to-r from-indigo-500 to-purple-500
+                     text-white font-medium disabled:opacity-50"
           >
-            Go!
-          </button>
+            Search
+          </motion.button>
         </div>
-      </center>
-      
+      </motion.div>
 
-      {/* Video & Playlist Section */}
-      <div className="flex flex-col md:flex-row mt-6 space-x-0 md:space-x-6">
+      {/* Video and Playlist Section */}
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Video Player */}
-        <div className="w-full md:w-2/3 bg-white shadow-lg p-4 rounded-lg">
-          <ReactPlayer 
-            ref={playerRef} // Create a ref to control the player
-            url={currentVideo} 
-            controls 
-            width="100%" 
-            height="500px" 
-            playing={isPlaying} // Control playing state
-            onPause={() => setIsPlaying(false)} // Update state on pause
-            onPlay={() => setIsPlaying(true)} // Update state on play
-            onProgress={handleProgress} // Save progress to localStorage
-            onStart={() => playerRef.current.seekTo(startTime)} // Resume from last saved time
-          />
-  
-<h3 className="text-2xl mt-2 text-black"> {/* Set text color to black */}
-  {title}
-</h3>
-  <hr className="my-2" />
+        <motion.div 
+          className="w-full lg:w-2/3 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden"
+          initial={{ x: -20 }}
+          animate={{ x: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          <div className="relative pt-[56.25%]">
+            <div className="absolute inset-0">
+              <ReactPlayer
+                ref={playerRef}
+                url={currentVideo}
+                width="100%"
+                height="100%"
+                playing={isPlaying}
+                controls
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onProgress={handleProgress}
+                onStart={() => playerRef.current.seekTo(startTime)}
+                className="absolute top-0 left-0"
+              />
+            </div>
+          </div>
 
-  {/* Control Buttons */}
-  <div className="flex justify-center space-x-4 my-4"> {/* Reduced space-x and my */}
-    <button 
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-      onClick={() => playerRef.current.seekTo(playerRef.current.getCurrentTime() - 10)} 
-    >
-      -10s
-    </button>
-    <button 
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-      onClick={() => setIsPlaying(!isPlaying)}
-    >
-      {isPlaying ? "Pause" : "Play"}
-    </button>
-    <button 
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-      onClick={() => playerRef.current.seekTo(playerRef.current.getCurrentTime() + 10)}
-    >
-      +10s
-    </button>
-   
-  </div>
+          <div className="p-6">
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
+              {title}
+            </h3>
 
-  {/* Centered Button for Show/Hide Description */}
-  <div className="flex justify-center my-3"> {/* Reduced margin */}
-    <button 
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-      onClick={() => setIsDescriptionVisible(!isDescriptionVisible)}
-    >
-      {isDescriptionVisible ? "Hide Description" : "Show Description"}
-    </button>
-  </div>
+            {/* Control Buttons */}
+            <div className="flex justify-center items-center gap-6 mb-6">
+              {/* Backward 10s */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => playerRef.current.seekTo(playerRef.current.getCurrentTime() - 10)}
+                className="relative inline-flex h-12 w-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+              >
+                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                  <FaBackward className="w-4 h-4" />
+                </span>
+              </motion.button>
 
-  {/* Conditional Rendering of Description */}
-  {isDescriptionVisible && (
-    <p className="text-black mt-2"> {/* Added margin-top for spacing */}
-      {description.split('\n').map((line, index) => (
-        <span key={index}>{line}<br /></span>
-      ))}
-    </p>
-  )}
-</div>
+              {/* Play/Pause */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsPlaying(!isPlaying)}
+                className="relative inline-flex h-16 w-16 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+              >
+                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                  {isPlaying ? (
+                    <FaPause className="w-6 h-6" />
+                  ) : (
+                    <FaPlay className="w-6 h-6 ml-1" />
+                  )}
+                </span>
+              </motion.button>
+
+              {/* Forward 10s */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => playerRef.current.seekTo(playerRef.current.getCurrentTime() + 10)}
+                className="relative inline-flex h-12 w-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+              >
+                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                  <FaForward className="w-4 h-4" />
+                </span>
+              </motion.button>
+            </div>
+
+            {/* Description Toggle Button */}
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setIsDescriptionVisible(!isDescriptionVisible)}
+              className="relative inline-flex w-full h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+            >
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+              <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+                {isDescriptionVisible ? 'Hide Description' : 'Show Description'}
+              </span>
+            </motion.button>
+
+            {isDescriptionVisible && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="mt-4 text-gray-700 dark:text-gray-300"
+              >
+                {linkify(description)}
+              </motion.div>
+            )}
+          </div>
+        </motion.div>
 
         {/* Playlist */}
-        <div className="w-full md:w-1/3 bg-white shadow-lg p-4 rounded-lg overflow-y-scroll h-[700px]">
-  <h3 className="text-xl text-gray-700">Playlist</h3>
-  <p className="text-center text-gray-500 mb-2">Total videos: {playlistResponse.length}</p>
-  {playlistResponse.map((video, idx) => (
-  <div
-    key={idx}
-    className="flex items-center space-x-4 cursor-pointer hover:bg-gray-100 p-2 rounded-lg"
-    onClick={() => nextVideo(video, video.snippet.title, video.snippet.description)}
-  >
-    <img src={video.snippet.thumbnails.default.url} className="w-16 h-16 rounded-lg" />
-    <p className="text-gray-600">{video.snippet.title}</p>
-  </div>
-))}
+        <motion.div 
+          className="w-full lg:w-1/3 bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden"
+          initial={{ x: 20 }}
+          animate={{ x: 0 }}
+          transition={{ delay: 0.8 }}
+        >
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Playlist</h3>
+            <p className="text-gray-500 dark:text-gray-400">
+              Total videos: {playlistResponse.length}
+            </p>
+          </div>
 
-</div>
-
-
+          {isLoading ? (
+            <div className="flex justify-center items-center h-[600px]">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+            </div>
+          ) : error ? (
+            <div className="flex justify-center items-center h-[600px] text-red-500 px-4 text-center">
+              {error}
+            </div>
+          ) : (
+            <div className="overflow-y-auto h-[600px] playlist-scroll">
+              {playlistResponse.map((video, idx) => (
+                <motion.div
+                  key={idx}
+                  whileHover={{ backgroundColor: 'rgba(0,0,0,0.05)' }}
+                  className="p-4 cursor-pointer border-b border-gray-100 dark:border-gray-700"
+                  onClick={() => nextVideo(video, video.snippet.title, video.snippet.description)}
+                >
+                  <div className="flex gap-4">
+                    <img 
+                      src={video.snippet.thumbnails.default.url} 
+                      className="w-24 h-16 object-cover rounded-md"
+                      alt={video.snippet.title}
+                    />
+                    <p className="text-gray-700 dark:text-gray-300 line-clamp-2">
+                      {video.snippet.title}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };

@@ -16,8 +16,10 @@
     "motion": "^12.4.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-icons": "^5.5.0",
     "react-player": "^2.16.0",
     "react-router-dom": "^7.2.0",
+    "react-toastify": "^11.0.3",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.0.8"
   },
