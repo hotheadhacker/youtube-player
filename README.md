@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Distraction Free YouTube Player
 
 <div align="center">
@@ -19,13 +18,6 @@ Welcome to the **Distraction Free YouTube Player**, a platform developed for foc
 - **Saved Progress**: Resume where you left off with automatic progress tracking
 - **Focused Learning**: The interface is tailored for maximum concentration
 - **Optimized Performance**: Fast loading and smooth playback
-=======
-# Distraction-Free YouTube Player
-![YouTube Logo](https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg)
-
-Welcome to the **Distraction-Free YouTube Player**, a platform developed for focused and optimized learning with YouTube videos!
->>>>>>> 823965ff1d99c4a99d552d4b90318456b4d1b028
-
 
 ## Tech Stack
 
