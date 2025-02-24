@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
 import ReactPlayer from 'react-player/youtube';
 import { motion } from 'framer-motion';
 import { SiPython, SiReact, SiGraphql, SiJavascript, SiNodedotjs, 
@@ -7,6 +6,7 @@ import { SiPython, SiReact, SiGraphql, SiJavascript, SiNodedotjs,
 import { FaPlay, FaPause, FaForward, FaBackward, FaJava } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { searchVideos, getPlaylistItems } from '../api/youtube';
 
 export default function Body() {
     
@@ -52,20 +52,12 @@ const [error, setError] = useState(null);
   }
   function submitData() {
     if (data === '') {
-      toast.warning("Please enter a search term!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast.warning("Please enter a search term!");
       return;
     }
 
     setSearchBoxFlag(true);
-    axios
-      .get(`https://www.googleapis.com/youtube/v3/search?part=snippet&key=${import.meta.env.VITE_YOUTUBE_API_KEY}&type=video&maxResults=20&q=${data}`)
+    searchVideos(data)
       .then((response) => {
         setPlaylistResponse(response.data.items);
         localStorage.setItem('savedPlaylist', JSON.stringify(response.data.items));
@@ -141,7 +133,7 @@ const [error, setError] = useState(null);
       return;
     }
 
-    axios.get(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=100&key=${import.meta.env.VITE_YOUTUBE_API_KEY}&playlistId=${playlistId}`)
+    getPlaylistItems(playlistId)
       .then((response) => {
         setPlaylistResponse(response.data.items);
         localStorage.setItem('savedPlaylist', JSON.stringify(response.data.items));
