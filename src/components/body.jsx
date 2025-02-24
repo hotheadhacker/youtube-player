@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import ReactPlayer from 'react-player/youtube';
 
@@ -12,7 +12,7 @@ import DenoImg from './../imgs/deno.svg';
 import TSImg from './../imgs/typescript.png';
 import DockerImg from './../imgs/docker.png';
 
-export default () => {
+export default function Body() {
     
   const [data, setData] = useState('');
   const [searchBoxFlag, setSearchBoxFlag] = useState(false);
@@ -58,7 +58,7 @@ const [startTime, setStartTime] = useState(0); // Track video start time for res
     } else {
       setSearchBoxFlag(true);
       axios
-        .get(`https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyBWLybXWaAdV7-7tlm9aClkSPiPAdm7boA&type=video&maxResults=20&q=${data}`)
+        .get(`https://www.googleapis.com/youtube/v3/search?part=snippet&key=${import.meta.env.VITE_YOUTUBE_API_KEY}&type=video&maxResults=20&q=${data}`)
         .then((response) => {
           setPlaylistResponse(response.data.items);
           localStorage.setItem('savedPlaylist', JSON.stringify(response.data.items)); // Save playlist data
@@ -99,7 +99,7 @@ const [startTime, setStartTime] = useState(0); // Track video start time for res
     }
 
     console.log("Python button clicked!");
-    axios.get('https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=100&key=AIzaSyBWLybXWaAdV7-7tlm9aClkSPiPAdm7boA&playlistId=' +playlistId)
+    axios.get(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=100&key=${import.meta.env.VITE_YOUTUBE_API_KEY}&playlistId=${playlistId}`)
         .then((response) => {
            
             setPlaylistResponse(response.data.items);

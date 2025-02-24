@@ -143,6 +143,10 @@ dmypy.json
 frontend/node_modules
 frontend/.pnp
 frontend/.pnp.js
+node_modules
+.env
+build
+dist
 
 # testing
 frontend/coverage

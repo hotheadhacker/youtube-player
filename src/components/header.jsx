@@ -1,7 +1,6 @@
 // frontend/src/components/header.js
-import React from 'react';
 
-const Header = ({ toggleTheme }) => {
+export default function Header({ toggleTheme }) {
   return (
     <div className="bg-gray-900 text-white py-8 flex justify-between items-center px-4">
       <div className="flex-grow">
@@ -19,5 +18,3 @@ const Header = ({ toggleTheme }) => {
     </div>
   );
 };
-
-export default Header;
