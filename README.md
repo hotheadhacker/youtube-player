@@ -1,5 +1,6 @@
 # Distraction-Free YouTube Player
 ![YouTube Logo](https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg)
+
 Welcome to the **Distraction-Free YouTube Player**, a platform developed for focused and optimized learning with YouTube videos!
 
 
