@@ -1,5 +1,5 @@
 
-# <span style="font-family: 'Boreal', 'Jano Sans Pro', 'Roboto', sans-serif; font-weight: 700;">‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎‎Distraction Free</span> <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" width="110px" style="vertical-align: -2px; display: inline-block; margin-left: 5px;" /> <span style="font-family: 'Boreal', 'Jano Sans Pro', 'Roboto', sans-serif; font-weight: 700;">Player</span>
+# <span style="font-family: 'Boreal', 'Jano Sans Pro', 'Roboto', sans-serif; font-weight: 700;">‎ ‎ ‎ ‎ ‎‎‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎‎Distraction Free</span> <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" width="110px" style="vertical-align: -2px; display: inline-block; margin-left: 5px;" /> <span style="font-family: 'Boreal', 'Jano Sans Pro', 'Roboto', sans-serif; font-weight: 700;">Player</span>
 
 <div align="center">
   <img src="demo.png" alt="Demo Screenshot" width="100%" />
@@ -15,7 +15,7 @@
 - **Distraction-Free**: Clean interface without recommendations or comments
 - **Multiple Playlists**: Organized learning paths for different technologies
 - **Saved Progress**: Resume where you left off with automatic progress tracking
-- **Focused Learning**: The interface is tailored for maximum concentration
+- **Toggle Between APIs**: Switch between default and custom YouTube API keys
 - **Optimized Performance**: Fast loading and smooth playback
 
 ## Tech Stack
