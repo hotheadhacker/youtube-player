@@ -1,12 +1,11 @@
-# Distraction Free YouTube Player
+
+# <span style="font-family: 'Boreal', 'Jano Sans Pro', 'Roboto', sans-serif; font-weight: 700;">‎ ‎ ‎ ‎ ‎‎‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎‎Distraction Free</span> <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" width="110px" style="vertical-align: -2px; display: inline-block; margin-left: 5px;" /> <span style="font-family: 'Boreal', 'Jano Sans Pro', 'Roboto', sans-serif; font-weight: 700;">Player</span>
 
 <div align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" width="200px" />
-  <br/>
   <img src="demo.png" alt="Demo Screenshot" width="100%" />
 </div>
 
-Welcome to the **Distraction Free YouTube Player**, a platform developed for focused and optimized learning with YouTube videos!
+ ### Welcome to the **Distraction Free YouTube Player**, a platform developed for focused and optimized learning with YouTube videos!
 
 ## Platform Features
 
@@ -16,7 +15,7 @@ Welcome to the **Distraction Free YouTube Player**, a platform developed for foc
 - **Distraction-Free**: Clean interface without recommendations or comments
 - **Multiple Playlists**: Organized learning paths for different technologies
 - **Saved Progress**: Resume where you left off with automatic progress tracking
-- **Focused Learning**: The interface is tailored for maximum concentration
+- **Toggle Between APIs**: Switch between default and custom YouTube API keys
 - **Optimized Performance**: Fast loading and smooth playback
 
 ## Tech Stack
@@ -72,7 +71,7 @@ Please ensure your PR description clearly describes the changes and their benefi
 
 ## Credits
 
-Platform designed by [Salman Qureshi](https://isalman.dev) and redesigned by [Zaid Adil](https://hothead01th.vercel.app).
+Platform designed by [Salman Qureshi](https://isalman.dev) and redesigned by [Zaid Adil](https://hothead.vercel.app).
 
 ## Source Code
 

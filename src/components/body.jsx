@@ -6,7 +6,7 @@ import { SiPython, SiReact, SiGraphql, SiJavascript, SiNodedotjs,
 import { FaPlay, FaPause, FaForward, FaBackward, FaJava } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { searchVideos, getPlaylistItems } from '../api/youtube';
+import { searchVideos, getPlaylistItems, setApiKey } from '../api/youtube';
 
 export default function Body() {
     
@@ -226,6 +226,10 @@ const [error, setError] = useState(null);
     ));
   };
 
+  const handleApiKeyChange = (newKey) => {
+    setApiKey(newKey);
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -272,36 +276,34 @@ const [error, setError] = useState(null);
         ))}
       </motion.div>
 
-      {/* Search Section */}
+      {/* Search and API Key Section */}
       <motion.div 
-        className="max-w-2xl mx-auto mb-10"
+        className="relative w-full max-w-2xl mx-auto mb-8"
         initial={{ y: 20 }}
         animate={{ y: 0 }}
         transition={{ delay: 0.6 }}
       >
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="Search for tutorials..."
-            value={data}
-            onChange={getData}
-            onKeyPress={(e) => e.key === 'Enter' && submitData()}
-            className="w-full p-4 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 
-                     bg-white dark:bg-gray-800 text-gray-900 dark:text-white
-                     focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-          />
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={submitData}
-            disabled={!data}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2
-                     px-4 py-2 rounded-md bg-gradient-to-r from-indigo-500 to-purple-500
-                     text-white font-medium disabled:opacity-50"
-          >
-            Search
-          </motion.button>
-        </div>
+        <input
+          type="text"
+          placeholder="Search for tutorials..."
+          value={data}
+          onChange={getData}
+          onKeyPress={(e) => e.key === 'Enter' && submitData()}
+          className="w-full p-4 pr-12 rounded-lg border border-gray-200 dark:border-gray-700 
+                   bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                   focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        />
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={submitData}
+          disabled={!data}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2
+                   px-4 py-2 rounded-md bg-gradient-to-r from-indigo-500 to-purple-500
+                   text-white font-medium disabled:opacity-50"
+        >
+          Search
+        </motion.button>
       </motion.div>
 
       {/* Video and Playlist Section */}

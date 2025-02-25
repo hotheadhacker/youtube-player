@@ -1,7 +1,11 @@
 import axios from 'axios';
 
-const YOUTUBE_API_KEY = import.meta.env.YOUTUBE_API_KEY;
+let YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 const BASE_URL = 'https://www.googleapis.com/youtube/v3';
+
+export const setApiKey = (newKey) => {
+  YOUTUBE_API_KEY = newKey;
+};
 
 export async function searchVideos(query) {
   return axios.get(`${BASE_URL}/search`, {
