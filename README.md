@@ -80,3 +80,7 @@ Check out the source code on GitHub: [hotheadhacker/youtube-player](https://gith
 ---
 
 Thank you for using the Distraction-Free YouTube Player! If you find it helpful, please consider giving it a star ⭐
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=hotheadhacker/youtube-player&type=Date)](https://star-history.com/#hotheadhacker/youtube-player&Date)
