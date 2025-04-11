@@ -2,6 +2,10 @@
 # <span style="font-family: 'Boreal', 'Jano Sans Pro', 'Roboto', sans-serif; font-weight: 700;">‎ ‎ ‎ ‎ ‎‎‎ ‎‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎ ‎ ‎ ‎‎Distraction Free</span> <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" width="110px" style="vertical-align: -2px; display: inline-block; margin-left: 5px;" /> <span style="font-family: 'Boreal', 'Jano Sans Pro', 'Roboto', sans-serif; font-weight: 700;">Player</span>
 
 <!-- GitAds-Verify: OV8JDOTA7XDN15BOREDXURQO7H4EQCNK -->
+## GitAds Sponsored
+[![Sponsored by GitAds](https://www.gitads.dev/v1/ad-serve?source=hotheadhacker/youtube-player@github)](https://www.gitads.dev/v1/ad-track?source=hotheadhacker/youtube-player@github)
+
+
 
 <div align="center">
   <img src="demo.png" alt="Demo Screenshot" width="100%" />
