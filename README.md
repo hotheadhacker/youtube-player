@@ -5,6 +5,8 @@
 ## GitAds Sponsored
 [![Sponsored by GitAds](https://www.gitads.dev/v1/ad-serve?source=hotheadhacker/youtube-player@github)](https://www.gitads.dev/v1/ad-track?source=hotheadhacker/youtube-player@github)
 
+## GitAds Sponsored
+[![Sponsored by GitAds](https://gitads.dev/v1/ad-serve?source=hotheadhacker/awesome-selfhost-docker@github)](https://gitads.dev/v1/ad-track?source=hotheadhacker/awesome-selfhost-docker@github)
 
 
 <div align="center">
